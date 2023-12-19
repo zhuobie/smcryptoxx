@@ -24,6 +24,14 @@
  pkg install gmp libtasn1
  ```
 
+ - Windows
+
+ In msys2:
+
+ ```
+ pacman -S gcc make cmake gmp-devel libtasn1-devel
+ ```
+
  Then build this lib:
 
  ```
