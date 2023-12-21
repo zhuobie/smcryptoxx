@@ -23,7 +23,3 @@ add_test(NAME test_sm4_static COMMAND test_sm4_static)
 add_test(NAME test_sm2_shared COMMAND test_sm2_shared)
 add_test(NAME test_sm3_shared COMMAND test_sm3_shared)
 add_test(NAME test_sm4_shared COMMAND test_sm4_shared)
-
-if(NOT MSYS)
-    add_custom_command(TARGET test_sm4_shared POST_BUILD COMMAND ctest)
-endif(NOT MSYS)

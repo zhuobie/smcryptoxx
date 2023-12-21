@@ -26,11 +26,13 @@
 
  - Windows
 
- In msys2:
+ In MSYS2:
 
  ```
  pacman -S gcc make cmake gmp-devel libtasn1-devel
  ```
+
+ In Cygwin: Install `gcc-g++ make cmake libgmp-devel libtasn1-devel`
 
  Then build this lib:
 
@@ -40,8 +42,8 @@
  cd build
  cmake ..
  make
- make test
  make install
+ make test
  ```
 
  # Examples
