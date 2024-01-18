@@ -162,6 +162,13 @@ std::string encrypt_ecb_string(const std::string& msg_string, const std::string&
     return byte_array_to_hex(encrypted_ecb_byte_array);
 }
 
+void encrypt_ecb_to_file(const std::string& data_path, const std::string& encrypt_path, const std::string& key) {
+    std::vector<uint8_t> data_bytes = bytes_from_file(data_path);
+    std::vector<uint8_t> key_bytes(key.begin(), key.end());
+    std::vector<uint8_t> encrypt_bytes = encrypt_ecb(data_bytes, key_bytes);
+    bytes_to_file(encrypt_bytes, encrypt_path);
+}
+
 std::vector<uint8_t> decrypt_ecb(const std::vector<uint8_t>& input_data, const std::vector<uint8_t>& key) {
     std::vector<uint32_t> sk = set_key(key, "SM4_DECRYPT");
     size_t length = input_data.size();
@@ -184,6 +191,13 @@ std::string decrypt_ecb_string(const std::string& msg_string, const std::string&
     std::vector<uint8_t> decrypted_byte_array = decrypt_ecb(msg_byte_array, key_byte_array);
     std::string decrypted_string(decrypted_byte_array.begin(), decrypted_byte_array.end());
     return decrypted_string;
+}
+
+void decrypt_ecb_from_file(const std::string& encrypt_path, const std::string& data_path, const std::string& key) {
+    std::vector<uint8_t> encrypt_bytes = bytes_from_file(encrypt_path);
+    std::vector<uint8_t> key_bytes(key.begin(), key.end());
+    std::vector<uint8_t> decrypt_bytes = decrypt_ecb(encrypt_bytes, key_bytes);
+    bytes_to_file(decrypt_bytes, data_path);
 }
 
 std::vector<uint8_t> encrypt_cbc(const std::vector<uint8_t>& p_input_data, const std::vector<uint8_t>& key, const std::vector<uint8_t>& p_iv) {
@@ -219,6 +233,14 @@ std::string encrypt_cbc_string(const std::string& msg_string, const std::string&
     return byte_array_to_hex(encrypted_cbc_byte_array);
 }
 
+void encrypt_cbc_to_file(const std::string& data_file, const std::string& encrypt_file, const std::string& key, const std::string& iv) {
+    std::vector<uint8_t> data_bytes = bytes_from_file(data_file);
+    std::vector<uint8_t> key_bytes(key.begin(), key.end());
+    std::vector<uint8_t> iv_bytes(iv.begin(), iv.end());
+    std::vector<uint8_t> encrypt_bytes = encrypt_cbc(data_bytes, key_bytes, iv_bytes);
+    bytes_to_file(encrypt_bytes, encrypt_file);
+}
+
 std::vector<uint8_t> decrypt_cbc(const std::vector<uint8_t>& input_data, const std::vector<uint8_t>& key, const std::vector<uint8_t>& p_iv) {
     std::vector<uint8_t> iv = p_iv;
     std::vector<uint32_t> sk = set_key(key, "SM4_DECRYPT");
@@ -249,4 +271,12 @@ std::string decrypt_cbc_string(const std::string& msg_string, const std::string&
     std::vector<uint8_t> decrypted_byte_array = decrypt_cbc(msg_byte_array, key_byte_array, iv_byte_array);
     std::string decrypted_string(decrypted_byte_array.begin(), decrypted_byte_array.end());
     return decrypted_string;
+}
+
+void decrypt_cbc_from_file(const std::string& encrypt_path, const std::string& data_path, const std::string& key, const std::string& iv) {
+    std::vector<uint8_t> encrypt_bytes = bytes_from_file(encrypt_path);
+    std::vector<uint8_t> key_bytes(key.begin(), key.end());
+    std::vector<uint8_t> iv_bytes(iv.begin(), iv.end());
+    std::vector<uint8_t> decrypt_bytes = decrypt_cbc(encrypt_bytes, key_bytes, iv_bytes);
+    bytes_to_file(decrypt_bytes, data_path);
 }

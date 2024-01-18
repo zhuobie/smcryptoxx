@@ -156,3 +156,8 @@ std::string sm3_hash_string(const std::string& msg_string) {
     std::string result_hash = sm3_hash(msg_bytes);
     return result_hash;
 }
+
+std::string sm3_hash_file(const std::string& file_path) {
+    std::vector<uint8_t> file_bytes = bytes_from_file(file_path);
+    return sm3_hash(file_bytes);
+}

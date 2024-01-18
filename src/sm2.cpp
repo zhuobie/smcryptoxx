@@ -462,6 +462,21 @@ bool verify_string(const std::string& id, const std::string& data, const std::st
     return verify_byte(id_bytes, data_bytes, sign_bytes, public_key);
 }
 
+void sign_to_file(const std::string& id, const std::string data_file_path, const std::string& sign_file_path, const std::string& private_key) {
+    std::vector<uint8_t> id_bytes(id.begin(), id.end());
+    std::vector<uint8_t> data_bytes = bytes_from_file(data_file_path);
+    std::vector<uint8_t> sign_result = sign_byte(id_bytes, data_bytes, private_key);
+    bytes_to_file(sign_result, sign_file_path);
+}
+
+bool verify_from_file(const std::string& id, const std::string data_file_path, const std::string& sign_file_path, const std::string& public_key) {
+    std::vector<uint8_t> id_bytes(id.begin(), id.end());
+    std::vector<uint8_t> data_bytes = bytes_from_file(data_file_path);
+    std::vector<uint8_t> sign_result = bytes_from_file(sign_file_path);
+    bool verify_result = verify_byte(id_bytes, data_bytes, sign_result, public_key);
+    return verify_result;
+}
+
 std::vector<uint8_t> encrypt_raw(const std::vector<uint8_t>& data, const std::string& public_key) {
     std::string k_hex = random_hex(PARA_LEN);
     mpz_class k_mpz(k_hex, 16);
@@ -561,6 +576,18 @@ std::string decrypt_string(const std::string& asn1_encrypt_data_base64, const st
     std::vector<uint8_t> decrypt_bytes = decrypt_byte(asn1_encrypt_data_bytes, private_key);
     std::string result_decrypt_string(decrypt_bytes.begin(), decrypt_bytes.end());
     return result_decrypt_string;
+}
+
+void encrypt_to_file(const std::string& data_file, const std::string& encrypt_file_path, const std::string& public_key) {
+    std::vector<uint8_t> data_bytes = bytes_from_file(data_file);
+    std::vector<uint8_t> encrypt_result = encrypt_byte(data_bytes, public_key);
+    bytes_to_file(encrypt_result, encrypt_file_path);
+}
+
+void decrypt_from_file(const std::string& encrypt_file_path, const std::string& data_file_path, const std::string& private_key) {
+    std::vector<uint8_t> encrypt_file_bytes = bytes_from_file(encrypt_file_path);
+    std::vector<uint8_t> decrypt_file_bytes = decrypt_byte(encrypt_file_bytes, private_key);
+    bytes_to_file(decrypt_file_bytes, data_file_path);
 }
 
 mpz_class kexhat(const mpz_class& x) {
